@@ -45,31 +45,22 @@ export class CmCanvas extends React.Component{
             isDown: true,
             previousPointX:event.offsetX,
             previousPointY:event.offsetY
-        },()=>{
-            const canvas = ReactDOM.findDOMNode(this.refs.canvas);
-            let x = event.offsetX;
-            let y = event.offsetY;
-            let ctx = canvas.getContext("2d");
-
-            ctx.beginPath();
-            ctx.arc(x, y, 10, 0, Math.PI * 2, true);
-            ctx.closePath();
-            ctx.fill();
         })
     }
     handleMouseMove(event){
         if(!this.state.isDown) return;
 
-        //if(this.state.isDown){
         const canvas = ReactDOM.findDOMNode(this.refs.canvas);
         let x = event.offsetX;
         let y = event.offsetY;
         let ctx = canvas.getContext("2d");
 
         ctx.beginPath();
-        ctx.arc(x, y, 10, 0, Math.PI * 2, true);
-        ctx.closePath();
-        ctx.fill();
+        ctx.lineCap = "round";
+        ctx.lineWidth = event.which === 1 ? 10 : 30;
+        ctx.moveTo(this.state.previousPointX, this.state.previousPointY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
 
         this.setState({
             previousPointX:event.offsetX,
@@ -87,12 +78,18 @@ export class CmCanvas extends React.Component{
         let ctx = canvas.getContext("2d");
 
         ctx.beginPath();
-        ctx.arc(x, y, 10, 0, Math.PI * 2, true);
-        ctx.closePath();
-        ctx.fill();
+        ctx.lineCap = "round";
+        ctx.lineWidth = event.which === 1 ? 10 : 30;
+        ctx.moveTo(this.state.previousPointX, this.state.previousPointY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
     }
     componentDidMount() {
         const canvas = ReactDOM.findDOMNode(this.refs.canvas);
+        canvas.oncontextmenu = function (e) {
+            e.preventDefault();
+        };
+
         const ctx = canvas.getContext("2d");
         ctx.fillStyle = 'rgb(200,255,255)';
         ctx.fillRect(0, 0, 640, 425);
